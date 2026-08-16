@@ -1,6 +1,13 @@
 name: Daily AI Creator Radar
 
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/daily-summary.yml"
+      - "data/config.github.json"
+      - "profiles/ai-creator/**"
   schedule:
     # GitHub Actions uses UTC. 00:30 UTC = 08:30 Asia/Shanghai.
     - cron: "30 0 * * *"
