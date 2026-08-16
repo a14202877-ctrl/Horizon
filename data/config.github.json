@@ -7,27 +7,18 @@
     "temperature": 0.3,
     "max_tokens": 8192,
     "throttle_sec": 1,
+    "analysis_concurrency": 3,
+    "enrichment_concurrency": 2,
     "languages": [
-      "zh",
-      "en"
-    ],
-    "analysis_concurrency": 5,
-    "enrichment_concurrency": 5
+      "zh"
+    ]
   },
   "processing": {
     "profiles_dir": "profiles",
-    "default_profile": "tech-news",
+    "default_profile": "ai-creator",
     "profile_settings": {
-      "tech-news": {
-        "threshold": 7.0,
-        "topic_dedup": true
-      },
-      "tech-blog": {
-        "threshold": 4.0,
-        "topic_dedup": false
-      },
-      "finance-news": {
-        "threshold": 7.0,
+      "ai-creator": {
+        "threshold": 7,
         "topic_dedup": true
       }
     }
@@ -35,38 +26,44 @@
   "sources": {
     "github": [
       {
-        "type": "user_events",
-        "username": "karpathy",
+        "type": "repo_releases",
+        "owner": "langgenius",
+        "repo": "dify",
         "enabled": true,
-        "profile": "tech-news"
+        "category": "ai-product",
+        "profile": "ai-creator"
       },
       {
         "type": "repo_releases",
-        "owner": "vllm-project",
-        "repo": "vllm",
+        "owner": "langchain-ai",
+        "repo": "langchain",
         "enabled": true,
-        "profile": "tech-news"
+        "category": "agent",
+        "profile": "ai-creator"
       },
       {
         "type": "repo_releases",
-        "owner": "sgl-project",
-        "repo": "sglang",
+        "owner": "huggingface",
+        "repo": "transformers",
         "enabled": true,
-        "profile": "tech-news"
+        "category": "model",
+        "profile": "ai-creator"
       },
       {
         "type": "repo_releases",
-        "owner": "triton-lang",
-        "repo": "triton",
+        "owner": "ComfyUI",
+        "repo": "ComfyUI",
         "enabled": true,
-        "profile": "tech-news"
+        "category": "video-generation",
+        "profile": "ai-creator"
       }
     ],
     "hackernews": {
       "enabled": true,
       "fetch_top_stories": 30,
-      "min_score": 150,
-      "profile": "tech-news"
+      "min_score": 100,
+      "category": "ai-industry",
+      "profile": "ai-creator"
     },
     "rss": [
       {
@@ -74,44 +71,28 @@
         "url": "https://simonwillison.net/atom/everything/",
         "enabled": true,
         "category": "ai-tools",
-        "profile": "tech-news"
+        "profile": "ai-creator"
       },
       {
         "name": "vLLM Blog",
         "url": "https://vllm.ai/blog/rss.xml",
         "enabled": true,
-        "category": "llm-inference",
-        "profile": "tech-blog",
-        "content_extractor": "trafilatura"
-      },
-      {
-        "name": "CNBC Finance",
-        "url": "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=10000664",
-        "enabled": true,
-        "category": "finance",
-        "profile": "finance-news",
-        "content_extractor": "trafilatura"
+        "category": "model",
+        "profile": "ai-creator"
       },
       {
         "name": "GitHub Trending - Daily",
         "url": "https://mshibanami.github.io/GitHubTrendingRSS/daily/all.xml",
         "enabled": true,
-        "category": "github-trending",
-        "profile": "tech-news"
+        "category": "oss",
+        "profile": "ai-creator"
       },
       {
         "name": "Semianalysis",
         "url": "https://newsletter.semianalysis.com/feed",
         "enabled": true,
-        "category": "semiconductors",
-        "profile": "tech-news"
-      },
-      {
-        "name": "LWN.net",
-        "url": "https://lwn.net/headlines/full_text?key=${LWN_KEY}",
-        "enabled": true,
-        "category": "linux-kernel",
-        "profile": "tech-news"
+        "category": "ai-commercialization",
+        "profile": "ai-creator"
       }
     ],
     "reddit": {
@@ -122,22 +103,24 @@
           "enabled": true,
           "sort": "hot",
           "time_filter": "day",
-          "fetch_limit": 10,
-          "min_score": 60,
-          "profile": "tech-news"
+          "fetch_limit": 12,
+          "min_score": 50,
+          "category": "model",
+          "profile": "ai-creator"
         },
         {
           "subreddit": "LocalLLaMA",
           "enabled": true,
           "sort": "hot",
           "time_filter": "day",
-          "fetch_limit": 10,
-          "min_score": 60,
-          "profile": "tech-news"
+          "fetch_limit": 12,
+          "min_score": 50,
+          "category": "oss",
+          "profile": "ai-creator"
         }
       ],
       "users": [],
-      "fetch_comments": 10
+      "fetch_comments": 8
     },
     "telegram": {
       "enabled": true,
@@ -146,58 +129,109 @@
           "channel": "zaihuapd",
           "enabled": true,
           "fetch_limit": 20,
-          "profile": ["tech-news", "finance-news"]
+          "category": "ai-industry",
+          "profile": "ai-creator"
         }
       ]
+    },
+    "ossinsight": {
+      "enabled": true,
+      "period": "past_24_hours",
+      "languages": [
+        "All",
+        "Python",
+        "TypeScript"
+      ],
+      "keywords": [
+        "AI",
+        "agent",
+        "LLM",
+        "video",
+        "model"
+      ],
+      "min_stars": 20,
+      "max_items": 20,
+      "category": "oss",
+      "profile": "ai-creator"
+    },
+    "google_news": {
+      "enabled": true,
+      "query": "artificial intelligence OR AI agent OR generative AI OR video generation",
+      "language": "en",
+      "country": "US",
+      "ceid": null,
+      "max_results": 40,
+      "category": "ai-industry",
+      "profile": "ai-creator"
+    },
+    "twitter": {
+      "enabled": false,
+      "users": [],
+      "fetch_limit": 0,
+      "profile": "ai-creator"
     }
   },
   "collection": {
     "time_window_hours": 24
   },
   "digest": {
-    "max_items": null,
+    "max_items": 15,
     "profile_order": [
-      "tech-news",
-      "tech-blog",
-      "finance-news"
+      "ai-creator"
     ],
-    "category_groups": {},
-    "default_group": "other",
-    "default_group_limit": null
+    "category_groups": {
+      "product": {
+        "name": "AI 产品与商业化",
+        "limit": 4,
+        "categories": [
+          "ai-product",
+          "ai-commercialization"
+        ]
+      },
+      "technology": {
+        "name": "模型与 Agent",
+        "limit": 5,
+        "categories": [
+          "model",
+          "agent"
+        ]
+      },
+      "tools": {
+        "name": "开源工具与视频生成",
+        "limit": 4,
+        "categories": [
+          "oss",
+          "ai-tools",
+          "video-generation"
+        ]
+      },
+      "industry": {
+        "name": "行业动态",
+        "limit": 3,
+        "categories": [
+          "ai-industry"
+        ]
+      }
+    },
+    "default_group": "industry",
+    "default_group_limit": 2
   },
   "webhook": {
     "enabled": true,
     "url_env": "HORIZON_WEBHOOK_URL",
     "delivery": "summary_and_items",
     "overview_position": "last",
-    "platform": "feishu",
-    "layout": "collapsible",
+    "platform": "generic",
+    "layout": "markdown",
     "fallback_layout": "markdown",
     "languages": [
       "zh"
     ],
     "request_body": {
-      "msg_type": "interactive",
-      "card": {
-        "schema": "2.0",
-        "config": {
-          "wide_screen_mode": true
-        },
-        "header": {
-          "title": {
-            "tag": "plain_text",
-            "content": "#{message_title}"
-          },
-          "template": "blue"
-        },
-        "body": {
-          "elements": [
-            {
-              "tag": "markdown",
-              "content": "#{summary}"
-            }
-          ]
-        }
+      "msgtype": "markdown",
+      "markdown": {
+        "title": "Horizon #{date} AI日报",
+        "text": "## Horizon AI日报｜#{date}\n\n本次精选：#{important_items}/#{all_items}\n\n#{summary?limit=18000&split=---}\n\n> Horizon"
       }
     },
     "headers": ""
